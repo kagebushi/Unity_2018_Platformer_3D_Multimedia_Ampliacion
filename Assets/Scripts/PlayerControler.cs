@@ -46,25 +46,30 @@ public class PlayerControler : MonoBehaviour
         moveDirection.Normalize();
         moveDirection = moveDirection * moveSpeed;
         moveDirection.y = yStore;
-        
-        if (Input.GetButtonDown("Jump"))
+
+        if (charCtrl.isGrounded)
         {
-            if (charCtrl.isGrounded)
+            moveDirection.y = 0f; // Resetea la velocidad vertical si está en el suelo
+
+            jumpCount = aditionalJump; // Reinicia el contador de saltos si está en el suelo
+
+            if (Input.GetButtonDown("Jump"))
             {
                 moveDirection.y = jumpForce;
             }
-            else if(jumpCount > 0)
+        }
+        else // Si está en el aire
+        {
+            if (Input.GetButtonDown("Jump") && jumpCount > 0)
             {
                 moveDirection.y = jumpForce;
                 jumpCount--;
             }
+
+            moveDirection.y += Physics.gravity.y * Time.deltaTime * gravityScale; // Aplica la gravedad
         }
 
-        if (charCtrl.isGrounded)
-        {
-            jumpCount = aditionalJump;
-        }
-        
+
 
         moveDirection.y += Physics.gravity.y * Time.deltaTime * gravityScale;
 
