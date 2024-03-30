@@ -8,7 +8,8 @@ public class KillPlayer : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            Debug.Log("Muerto");
+            GameManager.instance.Respawn();
         }
     }
+
 }

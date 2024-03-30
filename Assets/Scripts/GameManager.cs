@@ -4,11 +4,21 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    public static GameManager instance;
+
+    private Vector3 respawnPosition;
+
+    private void Awake()
+    {
+        instance = this;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
+        respawnPosition = PlayerControler.Instance.transform.position;
     }
 
     // Update is called once per frame
@@ -16,4 +26,24 @@ public class GameManager : MonoBehaviour
     {
         
     }
+
+    public void Respawn()
+    {
+        StartCoroutine("RespawnCo");
+    }
+
+    public IEnumerator RespawnCo()
+    {
+        PlayerControler.Instance.gameObject.SetActive(false);
+
+        CameraControler.instance.brain.enabled = false;
+
+        yield return new WaitForSeconds(2f);
+
+        PlayerControler.Instance.transform.position = respawnPosition;
+        PlayerControler.Instance.gameObject.SetActive(true);
+
+        CameraControler.instance.brain.enabled = true;
+    }
+
 }

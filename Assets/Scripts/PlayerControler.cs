@@ -6,6 +6,8 @@ using UnityEngine;
 public class PlayerControler : MonoBehaviour
 {
 
+    public static PlayerControler Instance;
+
     [Header("Movement")]
     public float moveSpeed;
     public float jumpForce;
@@ -29,6 +31,11 @@ public class PlayerControler : MonoBehaviour
 
     public Animator animator;
 
+
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     // Start is called before the first frame update
     void Start()
