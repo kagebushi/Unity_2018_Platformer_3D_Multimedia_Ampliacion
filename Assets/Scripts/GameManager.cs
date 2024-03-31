@@ -38,12 +38,16 @@ public class GameManager : MonoBehaviour
 
         CameraControler.instance.brain.enabled = false;
 
+        GUIManager.Instance.fadeOut = true;
+
         yield return new WaitForSeconds(2f);
 
         PlayerControler.Instance.transform.position = respawnPosition;
         PlayerControler.Instance.gameObject.SetActive(true);
 
         CameraControler.instance.brain.enabled = true;
+        
+        GUIManager.Instance.fadeIn = true;
     }
 
 }
