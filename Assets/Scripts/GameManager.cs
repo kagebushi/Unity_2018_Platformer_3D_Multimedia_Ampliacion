@@ -50,4 +50,10 @@ public class GameManager : MonoBehaviour
         GUIManager.Instance.fadeIn = true;
     }
 
+    public void setSpawnPoint(Vector3 spawnPoint)
+    {
+        respawnPosition = spawnPoint;
+        Debug.Log("¡CHECK POINT!");
+    }
+
 }
