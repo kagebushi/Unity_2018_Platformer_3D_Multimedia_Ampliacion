@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Unity.Jobs.LowLevel.Unsafe;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class PlayerControler : MonoBehaviour
 {
@@ -31,6 +32,11 @@ public class PlayerControler : MonoBehaviour
 
     public Animator animator;
 
+    [Header("KnockBack")]
+    public bool isKnocking;
+    public float knockbackLength = .5f;
+    private float knockbackCounter;
+    public Vector2 knockbackPower;
 
     private void Awake()
     {
@@ -46,51 +52,85 @@ public class PlayerControler : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float yStore = moveDirection.y;
-        //moveDirection = new Vector3(Input.GetAxisRaw("Horizontal"),0f,Input.GetAxisRaw("Vertical"));
-
-        moveDirection = (transform.forward * Input.GetAxisRaw("Vertical")) + (transform.right * Input.GetAxisRaw("Horizontal"));
-        moveDirection.Normalize();
-        moveDirection = moveDirection * moveSpeed;
-        moveDirection.y = yStore;
-
-        if (charCtrl.isGrounded)
+        if (!isKnocking)
         {
-            moveDirection.y = 0f; // Resetea la velocidad vertical si está en el suelo
+            float yStore = moveDirection.y;
+            //moveDirection = new Vector3(Input.GetAxisRaw("Horizontal"),0f,Input.GetAxisRaw("Vertical"));
 
-            jumpCount = aditionalJump; // Reinicia el contador de saltos si está en el suelo
+            moveDirection = (transform.forward * Input.GetAxisRaw("Vertical")) + (transform.right * Input.GetAxisRaw("Horizontal"));
+            moveDirection.Normalize();
+            moveDirection = moveDirection * moveSpeed;
+            moveDirection.y = yStore;
 
-            if (Input.GetButtonDown("Jump"))
+            if (charCtrl.isGrounded)
             {
-                moveDirection.y = jumpForce;
+                moveDirection.y = 0f; // Resetea la velocidad vertical si está en el suelo
+
+                jumpCount = aditionalJump; // Reinicia el contador de saltos si está en el suelo
+
+                if (Input.GetButtonDown("Jump"))
+                {
+                    moveDirection.y = jumpForce;
+                }
+            }
+            else // Si está en el aire
+            {
+                if (Input.GetButtonDown("Jump") && jumpCount > 0)
+                {
+                    moveDirection.y = jumpForce;
+                    jumpCount--;
+                }
+
+                moveDirection.y += Physics.gravity.y * Time.deltaTime * gravityScale; // Aplica la gravedad
+            }
+
+
+
+            moveDirection.y += Physics.gravity.y * Time.deltaTime * gravityScale;
+
+            charCtrl.Move(moveDirection * Time.deltaTime);
+
+            if (Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0)
+            {
+                transform.rotation = Quaternion.Euler(0f, playerCam.transform.rotation.eulerAngles.y, 0f);
+                Quaternion newRotation = Quaternion.LookRotation(new Vector3(moveDirection.x, 0f, moveDirection.z));
+                playerModel.transform.rotation = Quaternion.Slerp(playerModel.transform.rotation, newRotation, rotateSpeed * Time.deltaTime);
+
+            }
+
+        }
+
+        if (isKnocking)
+        {
+            knockbackCounter -= Time.deltaTime;
+
+            float yStore = moveDirection.y;
+            moveDirection = (playerModel.transform.forward * knockbackPower.x);
+            moveDirection.y = yStore;
+
+            moveDirection.y += Physics.gravity.y * Time.deltaTime * gravityScale;
+
+            charCtrl.Move(moveDirection * Time.deltaTime);
+
+            if (knockbackCounter <= 0)
+            {
+                isKnocking = false;
             }
         }
-        else // Si está en el aire
-        {
-            if (Input.GetButtonDown("Jump") && jumpCount > 0)
-            {
-                moveDirection.y = jumpForce;
-                jumpCount--;
-            }
+            
+        animator.SetFloat("Speed", Mathf.Abs(moveDirection.x) + Mathf.Abs(moveDirection.z));
+        animator.SetBool("Grounded", charCtrl.isGrounded);
+    }
 
-            moveDirection.y += Physics.gravity.y * Time.deltaTime * gravityScale; // Aplica la gravedad
-        }
+    public void knockback()
+    {
+        isKnocking = true;
 
+        knockbackCounter = knockbackLength;
+        Debug.Log("KnockBack");
 
-
-        moveDirection.y += Physics.gravity.y * Time.deltaTime * gravityScale;
+        moveDirection.y = knockbackPower.y;
 
         charCtrl.Move(moveDirection * Time.deltaTime);
-
-        if (Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0)
-        {
-            transform.rotation = Quaternion.Euler(0f,playerCam.transform.rotation.eulerAngles.y,0f);
-            Quaternion newRotation = Quaternion.LookRotation(new Vector3(moveDirection.x, 0f, moveDirection.z));
-            playerModel.transform.rotation = Quaternion.Slerp(playerModel.transform.rotation, newRotation, rotateSpeed * Time.deltaTime);
-
-        }
-
-        animator.SetFloat("Speed",Mathf.Abs(moveDirection.x) + Mathf.Abs(moveDirection.z));
-        animator.SetBool("Grounded", charCtrl.isGrounded);
     }
 }
