@@ -6,6 +6,8 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
+    public GameObject deathEffect;
+
     private Vector3 respawnPosition;
 
     private void Awake()
@@ -40,6 +42,8 @@ public class GameManager : MonoBehaviour
 
         GUIManager.Instance.fadeOut = true;
 
+        Instantiate(deathEffect,PlayerControler.Instance.transform.position + new Vector3(0f,1f,0f), PlayerControler.Instance.transform.rotation);
+
         yield return new WaitForSeconds(2f);
 
         PlayerControler.Instance.transform.position = respawnPosition;
@@ -48,6 +52,8 @@ public class GameManager : MonoBehaviour
         CameraControler.instance.brain.enabled = true;
         
         GUIManager.Instance.fadeIn = true;
+
+        HealthManager.instance.ResetHealth();
     }
 
     public void setSpawnPoint(Vector3 spawnPoint)
