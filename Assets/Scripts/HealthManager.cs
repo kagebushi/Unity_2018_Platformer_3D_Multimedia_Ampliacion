@@ -11,6 +11,8 @@ public class HealthManager : MonoBehaviour
     public float invincibleLength = 2f;
     private float invinvibleCounter;
 
+    public Sprite[] healthBarImages;
+
     void Awake()
     {
         instance = this;
@@ -19,7 +21,7 @@ public class HealthManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        ResetHealth();
     }
 
     // Update is called once per frame
@@ -68,13 +70,17 @@ public class HealthManager : MonoBehaviour
                 invinvibleCounter = invincibleLength;
             }
 
-            Debug.Log("Health left: " + currenthealth);
+            //Debug.Log("Health left: " + currenthealth);
+
         }
+        UpdateUI();
     }
 
     public void ResetHealth()
     {
         currenthealth = maxhealth;
+        GUIManager.Instance.healthImage.enabled = true;
+        UpdateUI();
     }
 
     public void AddHealth(int amountToHeal)
@@ -84,5 +90,39 @@ public class HealthManager : MonoBehaviour
         {
             currenthealth = maxhealth;
         }
+        UpdateUI();
+    }
+
+    public void UpdateUI()
+    {
+        GUIManager.Instance.healthText.text = currenthealth.ToString();
+
+        switch (currenthealth)
+        {
+            case 5:
+                GUIManager.Instance.healthImage.sprite = healthBarImages[4];
+                break;
+            case 4:
+                GUIManager.Instance.healthImage.sprite = healthBarImages[3];
+                break;
+            case 3:
+                GUIManager.Instance.healthImage.sprite = healthBarImages[2];
+                break;
+            case 2:
+                GUIManager.Instance.healthImage.sprite = healthBarImages[1];
+                break;
+            case 1:
+                GUIManager.Instance.healthImage.sprite = healthBarImages[0];
+                break;
+            case 0:
+                GUIManager.Instance.healthImage.enabled = false;
+                break;
+        }
+    }
+
+    public void PlayerKilled()
+    {
+        currenthealth = 0;
+        UpdateUI();
     }
 }

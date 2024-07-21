@@ -12,6 +12,11 @@ public class GUIManager : MonoBehaviour
 
     public bool fadeOut, fadeIn;
 
+    public Text healthText;
+    public Image healthImage;
+    
+    public Text coinText;
+
     private void Awake()
     {
         Instance = this;

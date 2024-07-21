@@ -13,7 +13,7 @@ public class HealthPickUp : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            Instantiate(HealEffect,this.transform.position,this.transform.rotation);
+            Instantiate(HealEffect, PlayerControler.Instance.transform.position + new Vector3(0f, 1f, 0f), PlayerControler.Instance.transform.rotation);
             Destroy(gameObject);
 
             if (isFullHeal)

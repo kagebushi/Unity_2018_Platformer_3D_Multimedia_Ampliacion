@@ -10,6 +10,8 @@ public class GameManager : MonoBehaviour
 
     private Vector3 respawnPosition;
 
+    public int currentCoins;
+
     private void Awake()
     {
         instance = this;
@@ -21,6 +23,8 @@ public class GameManager : MonoBehaviour
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
         respawnPosition = PlayerControler.Instance.transform.position;
+
+        AddCoins(0);
     }
 
     // Update is called once per frame
@@ -32,6 +36,7 @@ public class GameManager : MonoBehaviour
     public void Respawn()
     {
         StartCoroutine("RespawnCo");
+        HealthManager.instance.PlayerKilled();
     }
 
     public IEnumerator RespawnCo()
@@ -62,4 +67,9 @@ public class GameManager : MonoBehaviour
         Debug.Log("¡CHECK POINT!");
     }
 
+    public void AddCoins(int coinsTooAdd)
+    {
+        currentCoins += coinsTooAdd;
+        GUIManager.Instance.coinText.text = "" + currentCoins;
+    }
 }
