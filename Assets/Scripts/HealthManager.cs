@@ -70,6 +70,8 @@ public class HealthManager : MonoBehaviour
                 invinvibleCounter = invincibleLength;
             }
 
+            AudioManager.instance.PlaySFX(8);
+
             //Debug.Log("Health left: " + currenthealth);
 
         }

@@ -17,6 +17,12 @@ public class GUIManager : MonoBehaviour
     
     public Text coinText;
 
+    public GameObject pauseScreen;
+
+    public GameObject optionPanel;
+
+    public Slider musicVolSlider, sfxVolSlider;
+
     private void Awake()
     {
         Instance = this;
@@ -48,5 +54,40 @@ public class GUIManager : MonoBehaviour
                 fadeIn = false;
             }
         }
+    }
+
+    public void Resume()
+    {
+        GameManager.instance.pauseUnpause();
+    }
+
+    public void openOptions()
+    {
+        optionPanel.SetActive(true);
+    }
+
+    public void closeOptions()
+    {
+        optionPanel.SetActive(false);
+    }
+
+    public void GoToLevelSelect()
+    {
+
+    }
+
+    public void GoToMainMenu()
+    {
+
+    }
+
+    public void SetMusicLevel()
+    {
+        AudioManager.instance.SetMusicLevel();
+    }
+
+    public void SetSFXLevel()
+    {
+        AudioManager.instance.SetSFXLevel();
     }
 }

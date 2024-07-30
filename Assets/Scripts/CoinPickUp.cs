@@ -24,6 +24,7 @@ public class CoinPickUp : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             GameManager.instance.AddCoins(value);
+            AudioManager.instance.PlaySFX(5);
             Destroy(gameObject);
             Instantiate(coinEffect,transform.position,transform.rotation);
         }

@@ -13,6 +13,7 @@ public class HealthPickUp : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
+            AudioManager.instance.PlaySFX(7);
             Instantiate(HealEffect, PlayerControler.Instance.transform.position + new Vector3(0f, 1f, 0f), PlayerControler.Instance.transform.rotation);
             Destroy(gameObject);
 
