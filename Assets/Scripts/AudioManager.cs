@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
@@ -44,5 +45,10 @@ public class AudioManager : MonoBehaviour
     public void SetSFXLevel()
     {
         sfxMixer.audioMixer.SetFloat("SFXVolume",GUIManager.Instance.sfxVolSlider.value);
+    }
+
+    internal void StopMusic(int musicToPlay)
+    {
+        music[musicToPlay].Stop();
     }
 }

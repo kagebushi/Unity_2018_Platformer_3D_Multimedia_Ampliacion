@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -11,6 +13,10 @@ public class GameManager : MonoBehaviour
     private Vector3 respawnPosition;
 
     public int currentCoins;
+
+    public int levelEndMusic;
+
+    public string levelToLoad;  
 
     private void Awake()
     {
@@ -86,5 +92,18 @@ public class GameManager : MonoBehaviour
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None  ;
         }
+    }
+
+    public IEnumerator LevelEndWater()
+    {
+        AudioManager.instance.StopMusic(2);
+        
+        AudioManager.instance.PlayMusic(levelEndMusic);
+        
+        PlayerControler.Instance.stopMoving = true;
+        
+        yield return new WaitForSeconds(4f);
+
+        SceneManager.LoadScene(levelToLoad);
     }
 }

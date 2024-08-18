@@ -13,23 +13,16 @@ public class PlayerControler : MonoBehaviour
     public float moveSpeed;
     public float jumpForce;
     public float gravityScale = 3f;
-
     public Vector3 moveDirection;
-
     public float rotateSpeed = 5f;
-
     public int aditionalJump = 1;
-
     public int jumpCount;
+    public float bounceForce = 8f;
 
     [Header("References")]
-
     public CharacterController charCtrl;
-
     public Camera playerCam;
-
     public GameObject playerModel;
-
     public Animator animator;
 
     [Header("KnockBack")]
@@ -37,8 +30,9 @@ public class PlayerControler : MonoBehaviour
     public float knockbackLength = .5f;
     private float knockbackCounter;
     public Vector2 knockbackPower;
-
     public GameObject[] playerPieces;
+
+    internal bool stopMoving;
 
     private void Awake()
     {
@@ -54,7 +48,7 @@ public class PlayerControler : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!isKnocking)
+        if (!isKnocking && !stopMoving)
         {
             float yStore = moveDirection.y;
             //moveDirection = new Vector3(Input.GetAxisRaw("Horizontal"),0f,Input.GetAxisRaw("Vertical"));
@@ -86,10 +80,8 @@ public class PlayerControler : MonoBehaviour
                 moveDirection.y += Physics.gravity.y * Time.deltaTime * gravityScale; // Aplica la gravedad
             }
 
-
-
+            // Pieza del codigo para mover el personaje
             moveDirection.y += Physics.gravity.y * Time.deltaTime * gravityScale;
-
             charCtrl.Move(moveDirection * Time.deltaTime);
 
             if (Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0)
@@ -100,6 +92,13 @@ public class PlayerControler : MonoBehaviour
 
             }
 
+        }
+
+        if (stopMoving) 
+        {
+            moveDirection = Vector3.zero;
+            moveDirection.y += Physics.gravity.y * Time.deltaTime * gravityScale;
+            charCtrl.Move(moveDirection);
         }
 
         if (isKnocking)
@@ -133,6 +132,12 @@ public class PlayerControler : MonoBehaviour
 
         moveDirection.y = knockbackPower.y;
 
+        charCtrl.Move(moveDirection * Time.deltaTime);
+    }
+
+    public void Bounce()
+    {
+        moveDirection.y = bounceForce;
         charCtrl.Move(moveDirection * Time.deltaTime);
     }
 }
