@@ -75,11 +75,13 @@ public class GUIManager : MonoBehaviour
     public void GoToLevelSelect()
     {
         SceneManager.LoadScene("LevelSelect");
+        Time.timeScale = 1f;
     }
 
     public void GoToMainMenu()
     {
         SceneManager.LoadScene("MainMenu");
+        Time.timeScale = 1f;
     }
 
     public void SetMusicLevel()

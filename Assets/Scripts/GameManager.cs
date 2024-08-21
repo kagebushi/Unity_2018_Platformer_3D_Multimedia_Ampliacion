@@ -99,11 +99,10 @@ public class GameManager : MonoBehaviour
         AudioManager.instance.StopMusic(2);
         
         AudioManager.instance.PlayMusic(levelEndMusic);
-        
         PlayerControler.Instance.stopMoving = true;
-        
         yield return new WaitForSeconds(4f);
 
+        PlayerPrefs.SetInt(SceneManager.GetActiveScene().name + "_unlocked", 1);
         SceneManager.LoadScene(levelToLoad);
     }
 }
