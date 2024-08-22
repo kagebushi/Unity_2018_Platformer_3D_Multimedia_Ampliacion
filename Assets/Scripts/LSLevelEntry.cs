@@ -6,12 +6,13 @@ using UnityEngine.SceneManagement;
 public class LSLevelEntry : MonoBehaviour
 {
     public bool canLoadLevel;
-    public string LevelName, levelToCheck;
+    public string LevelName, levelToCheck, displayName;
     public GameObject MapPointActive, MapPointIncative;
     private bool _levelUnlocked, _levelLoading;
 
     void Start()
     {
+
         if (PlayerPrefs.GetInt(levelToCheck + "_unlocked") == 1 || levelToCheck == string.Empty)
         {
             MapPointActive.SetActive(true);
@@ -24,6 +25,12 @@ public class LSLevelEntry : MonoBehaviour
             MapPointIncative.SetActive(true);
             _levelUnlocked = false;
         }
+
+        if (PlayerPrefs.GetString("CurrentLevel") == LevelName)
+        {
+            PlayerControler.Instance.transform.position = transform.position;
+            LevelSelectResetPlayer.instance.respawPosition = transform.position;
+        }
     }
 
     void Update()
@@ -33,6 +40,8 @@ public class LSLevelEntry : MonoBehaviour
             StartCoroutine("LevelLoadWaiter");
             _levelLoading = true;
         }
+
+        
     }
 
     void OnTriggerEnter(Collider other)
@@ -40,6 +49,9 @@ public class LSLevelEntry : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             canLoadLevel = true;
+            
+            LSUIManager.instance.lnamePanel.SetActive(true);
+            LSUIManager.instance.lnameText.text = displayName;
         }
         
     }
@@ -50,6 +62,8 @@ public class LSLevelEntry : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             canLoadLevel = false;
+            
+            LSUIManager.instance.lnamePanel.SetActive(false);
         }
     }
 
@@ -62,5 +76,6 @@ public class LSLevelEntry : MonoBehaviour
 
         SceneManager.LoadScene(LevelName);
         PlayerControler.Instance.stopMoving = false;
+        PlayerPrefs.SetString("CurrentLevel", LevelName);
     }
 }
