@@ -52,6 +52,14 @@ public class LSLevelEntry : MonoBehaviour
             
             LSUIManager.instance.lnamePanel.SetActive(true);
             LSUIManager.instance.lnameText.text = displayName;
+            
+            if (PlayerPrefs.HasKey(LevelName + "_coins"))
+            {
+                LSUIManager.instance.coinText.text = PlayerPrefs.GetInt(LevelName + "_coins").ToString();
+            }
+            else {
+                LSUIManager.instance.coinText.text = "???";
+            }
         }
         
     }

@@ -9,6 +9,8 @@ public class LSUIManager : MonoBehaviour
 
     public Text lnameText;
 
+    public Text coinText;
+
     public GameObject lnamePanel;
 
     void Start()
