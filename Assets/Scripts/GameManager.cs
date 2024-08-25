@@ -16,14 +16,15 @@ public class GameManager : MonoBehaviour
 
     public int levelEndMusic;
 
-    public string levelToLoad;  
+    public string levelToLoad;
+    
+    internal bool isRespawning;
 
     private void Awake()
     {
         instance = this;
     }
 
-    // Start is called before the first frame update
     void Start()
     {
         Cursor.visible = false;
@@ -33,7 +34,6 @@ public class GameManager : MonoBehaviour
         AddCoins(0);
     }
 
-    // Update is called once per frame
     void Update() { if (Input.GetKeyDown(KeyCode.Escape)) { pauseUnpause(); } }
 
     public void Respawn()
@@ -50,6 +50,8 @@ public class GameManager : MonoBehaviour
 
         GUIManager.Instance.fadeOut = true;
 
+        isRespawning = true;
+
         Instantiate(deathEffect,PlayerControler.Instance.transform.position + new Vector3(0f,1f,0f), PlayerControler.Instance.transform.rotation);
 
         yield return new WaitForSeconds(2f);
@@ -62,6 +64,8 @@ public class GameManager : MonoBehaviour
         GUIManager.Instance.fadeIn = true;
 
         HealthManager.instance.ResetHealth();
+
+        isRespawning = false;
     }
 
     public void setSpawnPoint(Vector3 spawnPoint)
@@ -96,7 +100,7 @@ public class GameManager : MonoBehaviour
 
     public IEnumerator LevelEndWater()
     {
-        AudioManager.instance.StopMusic(2);
+        AudioManager.instance.StopMusic(AudioManager.instance.levelMusicToPlay);
         
         AudioManager.instance.PlayMusic(levelEndMusic);
         PlayerControler.Instance.stopMoving = true;

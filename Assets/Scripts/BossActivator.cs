@@ -4,15 +4,22 @@ using UnityEngine;
 
 public class BossActivator : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public static BossActivator Instance;
+    public GameObject entrance, theBoss;
+
+
+    void Awake()
     {
-        
+        Instance = this;
     }
 
-    // Update is called once per frame
-    void Update()
+    void OnTriggerEnter(Collider other)
     {
-        
+        if (other.CompareTag("Player"))
+        {
+            entrance.SetActive(false);
+            theBoss.SetActive(true);
+            gameObject.SetActive(false);
+        }
     }
 }

@@ -2898,6 +2898,7 @@ MonoBehaviour:
   musicMixer: {fileID: 243476288552309586, guid: d36db1b64d88fee48953f7bf9b4684ca,
     type: 2}
   sfxMixer: {fileID: 243947555368514134, guid: d36db1b64d88fee48953f7bf9b4684ca, type: 2}
+  levelMusicToPlay: 7
 --- !u!222 &1144875160
 CanvasRenderer:
   m_ObjectHideFlags: 0

@@ -13,12 +13,15 @@ public class AudioManager : MonoBehaviour
     public AudioSource[] sfx;
 
     public AudioMixerGroup musicMixer, sfxMixer;
+    
+    public int levelMusicToPlay;
+
     void Awake() { instance = this; }
 
     // Start is called before the first frame update
     void Start()
     {
-        PlayMusic(2);
+        PlayMusic(levelMusicToPlay);
     }
 
     // Update is called once per frame
